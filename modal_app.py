@@ -147,7 +147,7 @@ LTX_GUIDANCE   = 3.0
     gpu="A100-40GB",
     volumes={WEIGHTS_DIR_FLUX: flux_volume},
     timeout=600,
-    allow_concurrent_inputs=6,
+    allow_concurrent_inputs=1,
     secrets=[modal.Secret.from_name("huggingface-secret")],
 )
 class FluxGenerator:
