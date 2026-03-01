@@ -43,6 +43,11 @@ from pathlib import Path
 import anthropic
 import httpx
 
+from dotenv import load_dotenv
+
+# This searches for a .env file and loads its variables into os.environ
+load_dotenv()
+
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
