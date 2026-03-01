@@ -157,6 +157,17 @@ You are a professional short-film screenwriter.
 Given a film idea, produce a tight 1-to-2-minute script divided into
 EXACTLY 10 fragments of ~8 seconds each.
 
+CRITICAL RULES FOR VISUAL CONTINUITY:
+- The film should use AT MOST 2-3 distinct locations/environments.
+- Location changes must be GRADUAL — never cut between completely
+  different environments in adjacent segments.
+- If a location change is needed, dedicate a transition segment where
+  the character moves between locations (e.g. walking out a door,
+  driving, a corridor connecting two rooms).
+- Prefer stories that can be told in a SINGLE primary location with
+  minor setting variations (different angles, lighting shifts, moving
+  to an adjacent room).
+  
 Respond ONLY with a JSON array (no markdown fences, no preamble) where each
 element has these keys:
   fragment_id          (integer 0-9)
@@ -331,6 +342,12 @@ behind him, crashing waves below, cold blue-grey palette with amber lamp glow,
 mood of desperate hope"
 
 Also specify which characters are present in each keyframe.
+
+CRITICAL: Adjacent keyframes MUST be visually compatible for smooth
+video interpolation. Avoid dramatic changes in camera angle, lighting,
+or environment between consecutive keyframes. If the story requires a
+location change, make it gradual — e.g. kf_i shows a character at a
+doorway, kf_{i+1} shows them stepping through.
 
 Respond ONLY with a JSON array of exactly 11 objects (no fences, no preamble):
   keyframe_id          (integer 0-10)

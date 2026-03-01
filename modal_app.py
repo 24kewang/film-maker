@@ -55,9 +55,9 @@ CLIP_MODEL = "openai/clip-vit-large-patch14"
 
 LTX_WIDTH      = 768
 LTX_HEIGHT     = 448
-LTX_NUM_FRAMES = 201
+LTX_NUM_FRAMES = 161
 LTX_FRAME_RATE = 25
-LTX_GUIDANCE   = 3.0
+LTX_GUIDANCE   = 5.0
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -67,11 +67,10 @@ LTX_GUIDANCE   = 3.0
     gpu="A100-40GB",
     volumes={WEIGHTS_DIR_FLUX: flux_volume},
     timeout=600,
-    # FIX: set to 1 to avoid "RuntimeError: Already borrowed" from concurrent
-    # tokenizer access. Modal scales horizontally instead.
-    allow_concurrent_inputs=1,
+    min_containers=1,
     secrets=[modal.Secret.from_name("huggingface-secret")],
 )
+@modal.concurrent(max_inputs=1)
 class FluxGenerator:
 
     @modal.enter()
@@ -190,7 +189,8 @@ class FluxGenerator:
     gpu="A100-40GB",
     volumes={WEIGHTS_DIR_LTX: ltx_volume},
     timeout=900,
-    concurrency_limit=10,
+    max_containers=10,
+    min_containers=1,
     secrets=[modal.Secret.from_name("huggingface-secret")],
 )
 class LTXVideoGenerator:
@@ -286,7 +286,7 @@ class LTXVideoGenerator:
 # ─────────────────────────────────────────────────────────────────────────────
 
 @app.function()
-@modal.web_endpoint(method="POST")
+@modal.fastapi_endpoint(method="POST")
 def image_endpoint(item: dict) -> dict:
     """
     POST  { "prompt": str, "seeds": [42, 1337, 99999],
@@ -313,7 +313,7 @@ def image_endpoint(item: dict) -> dict:
 
 
 @app.function()
-@modal.web_endpoint(method="POST")
+@modal.fastapi_endpoint(method="POST")
 def video_endpoint(item: dict) -> dict:
     """
     POST  { "first_frame_b64": "<base64 PNG>",
