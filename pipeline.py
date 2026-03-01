@@ -217,7 +217,7 @@ async def _call_image_endpoint(
     width: int = 1024,
     height: int = 576,
 ) -> GeneratedImages:
-    async with httpx.AsyncClient(timeout=360) as client:
+    async with httpx.AsyncClient(timeout=360, follow_redirects=True) as client:
         resp = await client.post(
             MODAL_IMAGE_ENDPOINT,
             json={
@@ -301,7 +301,7 @@ async def _generate_one_clip(
     first_frame = chosen kf_{i}   last_frame = chosen kf_{i+1}
     """
     prompt = f"{fragment.narration} {fragment.action}".strip()
-    async with httpx.AsyncClient(timeout=600) as client:
+    async with httpx.AsyncClient(timeout=600, follow_redirects=True) as client:
         resp = await client.post(
             MODAL_VIDEO_ENDPOINT,
             json={
